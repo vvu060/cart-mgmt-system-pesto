@@ -1,70 +1,120 @@
-# Getting Started with Create React App
+---
+Start Date: DD-MM-YYYY
+RFC PR: (leave this empty if no PR yet)
+Blade Issue: (leave this empty if no issue yet)
+---
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Title of the RFC <!-- omit in toc -->
 
-## Available Scripts
+### Table Of Contents <!-- omit in toc -->
 
-In the project directory, you can run:
+- [Summary](#summary)
+- [Basic Example](#basic-example)
+- [Motivation](#motivation)
+- [Detailed Design](#detailed-design)
+- [Drawbacks/Constraints](#drawbacksconstraints)
+- [Alternatives](#alternatives)
+- [Adoption strategy](#adoption-strategy)
+- [How do we educate people?](#how-do-we-educate-people)
+- [Open Questions](#open-questions)
+- [References](#references)
 
-### `yarn start`
+# Summary
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## What is a Cart Management System?
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+A shopping cart on an online retailer's site is a piece of software that facilitates the purchase of a product or service. Shopping carts bridge the gap between shopping and buying, so having the best shopping cart software is extremely important on your website. A cart typically has three common aspects:
 
-### `yarn test`
+- It stores product information.
+- It's a gateway for order, catalog and customer management.
+- It renders product data, categories and site information for user display.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Motivation
 
-### `yarn build`
+- Why are we doing this?
+- What use cases does it support?
+- What is the expected outcome?
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Try to focus on explaining the motivation so that if this RFC is not accepted, the motivation could be used to develop alternative solutions. In other words, try to list down the constraints you are trying to solve without coupling them too closely to the solution you have in mind.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Detailed Design
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Shopping Cart is the core foundation of any E-Commerce application. An e-commerce shopping cart serves as a virtual cart that allows customers to add and hold items until they complete the purchase. It accepts payments of customers, organizes and distributes all order information to the merchant, customer, and other relevant parties.
 
-### `yarn eject`
+This process requires a database to store and retrieve the relevant data while supporting the functionality of the shopping cart. A shopping cart database will contain all the critical information about products, orders, and customers and allow users to perform real-time changes reflected in their shopping session.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Database Designs
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+A shopping cart database should be highly available, fault-tolerant, and highly responsive to provide customers a smooth shopping experience 24x7. When designing a shopping cart database, it can be divided into three main components for better categorization and understanding of the underlying data structure.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Static Data
+- Session Data
+- Processed Data
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Static Data
 
-## Learn More
+This component will include somewhat static data that the customer needs only to retrieve while interacting with a shopping cart. The data is stored in the following types of tables:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- product table
+- discount table
+- user table
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Session Data
 
-### Code Splitting
+This is the most important component of the shopping cart database where all the live interactions (session details) are stored when the client is interacting with the shopping cart.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- shopping_session table
+- cart_item table
 
-### Analyzing the Bundle Size
+### Processed Data
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Once the customer completes a transaction, we need to permanently store the order information by moving the Session Data into permanent storage. Additionally, we need to store the payment details.
 
-### Making a Progressive Web App
+- order_details table
+- order_details table
+- payment_details table
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Table Relationships in Database
 
-### Advanced Configuration
+The following diagram demonstrates the relationships within the above-mentioned tables inside the database using a sample fieldset. The fields in the tables may depend on the requirements of the specific e-commerce platform and can range from a simple to complex list of fields.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+![image](./DB_Design.jpg)
 
-### Deployment
+# Drawbacks/Constraints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Why should we _not_ do this? Maybe try to consider the following constraints
 
-### `yarn build` fails to minify
+- Implementation cost, both in terms of code size and complexity.
+- The impact of it on new as well as existing consumer projects.
+- Cost of migration.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+There are tradeoffs to choosing any path. Attempt to identify them here.
+
+# Alternatives
+
+What other designs/patterns/strategies have been considered?
+
+# Adoption strategy
+
+If we implement this proposal, how will existing consumer projects adopt it?
+
+- Is this a breaking change?
+- Can we write a codemod?
+- How do we prioritise this with business and product folks?
+- How do we communicate with other teams? Will updating docs suffice or do we need a dedicated interaction with them?
+
+# How do we educate people?
+
+- How should this be taught to other folks?
+- What names and terminology work best for these concepts and why?
+- How is this idea best presented?
+
+# Open Questions
+
+- Any open questions that you have?
+- Any undiscovered areas that you have encountered?
+- Any dependencies on other teams(Design/Engineering) that needs to be resolved upfront?
+
+# References
+
+Any references that you can share for those who are curious to understand anything beyond the scope of this RFC in general but related to the topic of this RFC.
